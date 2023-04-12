@@ -65,7 +65,7 @@ contract Assignment {
         emit ApplicationRejected(_student, block.timestamp);
     }
 
-        function rate(address _student, uint256 _rating) public {
+    function rate(address _student, uint256 _rating) public {
         require(msg.sender == Course(courseAddress).teacher(), "Only the course teacher can rate solutions");
 
         // Ensure the student has submitted an application and it has been accepted

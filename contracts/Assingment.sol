@@ -23,29 +23,16 @@ contract Assignment {
         string memory contentIpfsHash,
         uint256 applicationTimestamp,
         address student
-    ) internal view returns (bytes memory) {
+    ) internal view returns (bytes32) {
         return
-            abi.encodePacked(
-                courseAddress,
-                ipfsHash,
-                deadline,
-                student,
-                contentIpfsHash,
-                applicationTimestamp
-            );
-    }
-
-    function submitApplication(
-        string memory contentIpfsHash,
-        uint256 applicationTimestamp,
-        address student
-    ) public view returns (bytes32) {
-        return
-            ECDSA.toEthSignedMessageHash(
-                submitApplicationEncodedState(
+            keccak256(
+                abi.encodePacked(
+                    courseAddress,
+                    ipfsHash,
+                    deadline,
+                    student,
                     contentIpfsHash,
-                    applicationTimestamp,
-                    student
+                    applicationTimestamp
                 )
             );
     }
@@ -56,18 +43,18 @@ contract Assignment {
         address student,
         address teacher,
         uint256 rating
-    ) internal view returns (bytes memory) {
+    ) public view returns (bytes32) {
         return
-            abi.encodePacked(
-                keccak256(
+            keccak256(
+                abi.encodePacked(
                     submitApplicationEncodedState(
                         contentIpfsHash,
                         applicationTimestamp,
                         student
-                    )
-                ),
-                teacher,
-                rating
+                    ),
+                    teacher,
+                    rating
+                )
             );
     }
 
@@ -77,7 +64,7 @@ contract Assignment {
         address student,
         address teacher,
         uint256 rating
-    ) public view returns (bytes32) {
+    ) internal view returns (bytes32) {
         return
             ECDSA.toEthSignedMessageHash(
                 rateApplicationEncodedState(
